@@ -43,8 +43,6 @@ python blast2taxonomy_besthit.py -i test/blast.txt \
 ```
 
 ### 3.2. LCA (Lowest common ancestor)  
-
-### Options
 * -i : Input file, result of blast search (made at step 2)
 * -db : DB file `taxonomy.db` (made at step 1)
 * -o : Output file
