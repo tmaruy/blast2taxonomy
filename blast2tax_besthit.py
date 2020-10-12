@@ -29,12 +29,13 @@ for ii,jj in enumerate(fi):
 		acc = data[1].split(".")[0]
 		f1 = cur.execute("SELECT taxid FROM accession2taxid WHERE accession='" + acc + "';").fetchone()
 		if f1 == None:
-			tax = tax_name = ""
+			tax = ""
+			tax_name = ["", "", "", "", "", "", ""]
 		else:
 			tax = str(f1[0])
 			f2 = cur.execute("SELECT * FROM taxonomy WHERE taxid='" + tax + "';").fetchone()
-			if f2 == None: tax_name = "" 
-			else: tax_name = f2[2]
-		fo.write("\t".join([id, acc, str(evalue), tax, tax_name]) + "\n")
+			if f2 == None: tax_name = ["", "", "", "", "", "", ""]
+			else: tax_name = list(f2)[3:]
+		fo.write("\t".join([id, acc, str(evalue), tax] + tax_name) + "\n")
 fi.close()
 fo.close()
