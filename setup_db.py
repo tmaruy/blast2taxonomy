@@ -8,20 +8,17 @@ dbname = "taxonomy.db"
 conn = sqlite3.connect(dbname)
 cur = conn.cursor()
 
-# Create table: acc2tax
-command = "CREATE TABLE acc2tax(accession STRING PRIMARY KEY, taxid STRING)"
+# Create table: accession2taxid
+command = "DROP TABLE IF EXISTS accession2taxid"
+cur.execute(command)
+command = "CREATE TABLE accession2taxid(accession STRING PRIMARY KEY, taxid STRING)"
 cur.execute(command)
 #
 with open("db/prot.accession2taxid") as fi:
 	for i, j in enumerate(fi):
 		if i == 0: continue
 		acc, accv, tax, gi = j.strip("\n").split("\t")
-		cur.execute("INSERT INTO acc2tax VALUES (?, ?)", (acc, tax))
-with open("db/ead_prot.accession2taxid") as fi:
-	for i, j in enumerate(fi):
-		if i == 0: continue
-		acc, accv, tax, gi = j.strip("\n").split("\t")
-		cur.execute("INSERT INTO acc2tax VALUES (?, ?)", (acc, tax))
+		cur.execute("INSERT INTO accession2taxid VALUES (?, ?)", (acc, tax))
 
 # Create table: taxonomy
 command = "DROP TABLE IF EXISTS taxonomy"
