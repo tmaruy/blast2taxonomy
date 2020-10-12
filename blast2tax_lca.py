@@ -17,18 +17,19 @@ args = parser.parse_args()
 # Connect to DB
 conn = sqlite3.connect(args.db)
 cur = conn.cursor()
+threshold = args.lca_threshold / 100.0
 
 # parse & LCA
-def lca(vec, threshold=args.lca_threshold/100.0):
+def lca(vec, threshold=threshold):
 	uvec, num = np.unique(vec, return_counts=True)
 	idx = np.argmax(num)
-	if num[idx] > len(uvec) * threshold: return uvec[idx]
+	if num[idx] > len(vec) * threshold: return uvec[idx]
 	else: return ""
 def parse(df):
 	df = df.loc[df.evalue.astype(float) <= args.evalue, :]
 	if df.shape[0] > args.lca: df = df.iloc[:args.lca, :]
-	acc = "('" + "', '".join(df.sseqid.tolist()) + "')"
-	acc2tax = cur.execute("SELECT * FROM accession2taxid act, taxonomy tx WHERE act.accession IN " + acc + " AND act.taxid=tx.taxid;")
+	acc = "('" + "', '".join(df.sseqid.apply(lambda x: x.split(".")[0]).tolist()) + "')"
+	acc2tax = pd.read_sql("SELECT * FROM accession2taxid act, taxonomy tx WHERE act.accession IN " + acc + " AND act.taxid=tx.taxid;", conn)
 	if acc2tax.shape[0] == 0: 
 		return [id, "", "", "", "", "", "", ""]
 	else:
