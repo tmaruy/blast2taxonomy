@@ -13,8 +13,7 @@ parser.add_argument("-evalue_col",dest="evalue_col",action="store",default=11,ty
 args = parser.parse_args()
 
 # Connect to DB
-dbname = "/archive/data/hgc0934/toru/CREST/Transcriptome.2020/Annotation/CREST_v1/scripts/nr_taxonomy.db"
-conn = sqlite3.connect(dbname)
+conn = sqlite3.connect(args.db)
 cur = conn.cursor()
 
 # Load file
